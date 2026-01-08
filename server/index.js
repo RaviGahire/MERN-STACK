@@ -1,4 +1,4 @@
-const express = require("express");
+ const express = require("express");
 require("dotenv").config();
 const P = process.env.PORT;
 const H = process.env.HOST;
@@ -7,6 +7,7 @@ const app = express();
 //Express middlewares
 app.use(express.static("public/"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //Session 
 const sessionMiddleware = require("./middlewares/session_middleware");
@@ -18,11 +19,24 @@ const upload = require('./middlewares/multer_middleware')
 //database connection 
 const connectDB = require("./config/connectDB");
 
+// routes
 app.get("/", (req, res) => {
-    res.send("Hello boss server is runing well good job......!");
+
+res.status(200).json({
+    message:"Hello boss server is runing well good job......!"
+})
+
+    // res.send("Hello boss server is runing well good job......!");
 });
 
+//REST API 
+const authRoutes = require('./routes/authRoutes')
+app.use('/api',authRoutes)
 
+
+
+
+//Server
 app.listen(P, H, () => {
     console.log(`Server is runing on http://${H}:${P}`);
 });
