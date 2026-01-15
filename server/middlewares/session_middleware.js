@@ -8,6 +8,11 @@ if (!process.env.SECRET_KEY) {
 const sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
-    secret: SECRET_KEY
+    secret: SECRET_KEY,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
+
 })
 module.exports = sessionMiddleware;

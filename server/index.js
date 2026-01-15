@@ -21,17 +21,15 @@ const connectDB = require("./config/connectDB");
 
 // routes
 app.get("/", (req, res) => {
-
 res.status(200).json({
-    message:"Hello boss server is runing well good job......!"
-})
-
-    // res.send("Hello boss server is runing well good job......!");
-});
+    message:"Server is running, good job......!"
+})});
 
 //REST API 
 const authRoutes = require('./routes/authRoutes')
 app.use('/api',authRoutes)
+
+
 
 
 
