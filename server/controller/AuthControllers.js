@@ -1,7 +1,9 @@
 const express = require('express');
 const userSchema = require('../model/userSchema')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
+//=======================CRUD Controllers==============================
 // create user controller
 exports.createUser = async (req, res) => {
     try {
@@ -118,5 +120,83 @@ exports.updateUser = async (req, res) => {
             message: 'Internal server error while updating user data',
             error: error
         });
+    }
+}
+
+
+//============================AUTH Controllers===================================
+// login controller and jwt token 
+exports.userLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body
+        const isUserExists = await userSchema.findOne({ email: email })
+
+        //check if user exists or not 
+        if (!isUserExists) {
+            return res.status(401).json({
+                success: false,
+                message: "user not found"
+            })
+        }
+
+        // match password 
+        const isPassMatch = await bcrypt.compare(password, isUserExists.password)
+
+        if (!isPassMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid password"
+            })
+        }
+
+        //check both
+        if (isUserExists && isPassMatch) {
+
+            //jwt token payload
+            const jwt_token = jwt.sign(
+                //imp users details for verifaction of user
+                { id: isUserExists._id, userEmail: isUserExists.email, userRole: isUserExists.role },
+                //secretKey
+                process.env.JWT_SECRET_KEY,
+                {
+                    expiresIn: "1h"
+                }
+
+            )
+
+
+            return res.status(200).json({
+                success: true,
+                message: 'User logged in Successfully',
+                 // data: isUserExists
+                token: jwt_token
+            })
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error
+        })
+
+    }
+}
+
+exports.dashBoard = async (req,res) => {
+    try {
+
+        return res.status(200).json({
+            success: true,
+            message: "Dashboard page open successfully"
+        })
+
+    } catch (error) {
+
+        return res.status(403).json({
+            success: false,
+            message: 'No Premissions to open this page..!'
+        })
+
     }
 }

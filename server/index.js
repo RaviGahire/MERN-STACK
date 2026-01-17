@@ -1,5 +1,7 @@
  const express = require("express");
 require("dotenv").config();
+const cors = require("cors");
+
 const P = process.env.PORT;
 const H = process.env.HOST;
 const app = express();
@@ -8,6 +10,8 @@ const app = express();
 app.use(express.static("public/"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors()); // open to all origins
+// app.use(cors({ origin: "https://yourdomain.com" })); 
 
 //Session 
 const sessionMiddleware = require("./middlewares/session_middleware");
@@ -28,8 +32,6 @@ res.status(200).json({
 //REST API 
 const authRoutes = require('./routes/authRoutes')
 app.use('/api',authRoutes)
-
-
 
 
 

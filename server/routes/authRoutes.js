@@ -1,8 +1,11 @@
 const express = require('express');
-const { createUser, getSingleUser, getAllUsers, deleteUser, updateUser } = require('../controller/AuthControllers');
+const { createUser, getSingleUser, getAllUsers, deleteUser, updateUser,userLogin,dashBoard } = require('../controller/AuthControllers');
+const userSchema = require('../model/userSchema');
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-
+//===============================CRUD API'S and routes====================================
 // Routers and API creation
 router.get('/', async (req, res) => {
     // return is must 
@@ -34,6 +37,24 @@ router.delete('/users/:id', deleteUser)
 
 // Update user
 router.put('/users/:id', updateUser);
+
+
+//===============================AUTH API'S and routes====================================
+//user login
+router.post('/login', userLogin )
+
+
+//role based login
+const verifyJWTToken = require('../middlewares/auth_middleware');
+const authorizedRole = require('../middlewares/authorizeRoles')
+
+router.get('/dashboard',verifyJWTToken, authorizedRole('user') ,dashBoard)
+
+
+
+
+
+
 
 
 
