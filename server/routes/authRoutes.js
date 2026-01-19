@@ -1,5 +1,5 @@
 const express = require('express');
-const { createUser, getSingleUser, getAllUsers, deleteUser, updateUser,userLogin,dashBoard } = require('../controller/AuthControllers');
+const { createUser, getSingleUser, getAllUsers, deleteUser, updateUser,userLogin,dashBoard,userProfile } = require('../controller/AuthControllers');
 const userSchema = require('../model/userSchema');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
@@ -48,9 +48,11 @@ router.post('/login', userLogin )
 const verifyJWTToken = require('../middlewares/auth_middleware');
 const authorizedRole = require('../middlewares/authorizeRoles')
 
+//dashboard
 router.get('/dashboard',verifyJWTToken, authorizedRole('user') ,dashBoard)
 
-
+//profile
+router.get('/profile',verifyJWTToken, userProfile)
 
 
 

@@ -2,6 +2,7 @@ const express = require('express');
 const userSchema = require('../model/userSchema')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { IconScubaMask } = require('@tabler/icons-react');
 
 //=======================CRUD Controllers==============================
 // create user controller
@@ -108,7 +109,7 @@ exports.updateUser = async (req, res) => {
             id,
             { firstname, lastname, phone, email, city, password },
             { new: true }
-        );      
+        );
         return res.status(200).json({
             success: true,
             message: 'User updated successfully',
@@ -168,7 +169,7 @@ exports.userLogin = async (req, res) => {
             return res.status(200).json({
                 success: true,
                 message: 'User logged in Successfully',
-                 // data: isUserExists
+                // data: isUserExists
                 token: jwt_token
             })
         }
@@ -183,7 +184,8 @@ exports.userLogin = async (req, res) => {
     }
 }
 
-exports.dashBoard = async (req,res) => {
+// dashboard 
+exports.dashBoard = async (req, res) => {
     try {
 
         return res.status(200).json({
@@ -199,4 +201,40 @@ exports.dashBoard = async (req,res) => {
         })
 
     }
+}
+
+//profile
+
+exports.userProfile = async (req, res) => {
+
+    try {
+        const id = req.user.id
+        const user = await userSchema.findById(id)
+        if (!user) {
+            res.status(401).json({
+                message: 'User not found',
+                success: false
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "user profile data",
+            data: user
+        })
+
+
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: 'internal Server error',
+            error: error.message
+        })
+
+
+    }
+
+
 }
