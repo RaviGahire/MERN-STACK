@@ -1,6 +1,11 @@
+import { AppRoutes } from "./routes/AppRoutes";
 
-export const App = () => {
+ const App = () => {
   return (
-    <div className='text-3xl text-center'>MERN STACK DEVELOPER</div>
+ <>
+    <AppRoutes />
+  </>
   )
 }
+ export default App;
+ 
